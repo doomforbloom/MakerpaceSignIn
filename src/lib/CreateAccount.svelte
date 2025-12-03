@@ -112,6 +112,7 @@
             <Label>
                 <div class="text-white mb-1">Full Name</div>
                 <Input
+                    class="placeholder:text-grey-500 placeholder:opacity-50"
                     type="text"
                     placeholder="James McGill"
                     size="md"
@@ -121,6 +122,7 @@
             <Label>
                 <div class="text-white mb-1">EPCC ID Number</div>
                 <Input
+                    class="placeholder:text-grey-500 placeholder:opacity-50"  
                     type="text"
                     placeholder="12345678"
                     size="md"
@@ -133,6 +135,7 @@
             <Label>
                 <div class="text-white mb-1">Email</div>
                 <Input
+                    class="placeholder:text-grey-500 placeholder:opacity-50"
                     type="email"
                     placeholder="john@appleseed.com"
                     size="md"

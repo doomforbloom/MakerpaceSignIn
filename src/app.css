@@ -1,8 +1,5 @@
 @import "tailwindcss";
-
 @plugin 'flowbite/plugin';
-
-@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-primary-50: #fff5f2;
@@ -28,26 +25,10 @@
   --color-secondary-900: #0c4a6e;
 }
 
-@layer base {
-  /* disable chrome cancel button */
-  input[type="search"]::-webkit-search-cancel-button {
-    display: none;
-  }
-}
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body {

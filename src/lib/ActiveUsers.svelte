@@ -1,14 +1,21 @@
-<script>
-    import { Listgroup, ListgroupItem } from "flowbite-svelte";
+<script lang="ts">
+    import { Indicator, Listgroup, ListgroupItem } from "flowbite-svelte";
     import { tablesDB } from "./AW.svelte";
     import { Query } from "appwrite";
 
     let activeUsers = $state([]);
     let noUsersActive = $state(true);
-    let deleting = $state(false);
+    let trainings = $state([]);
+    type TrainingColor = "green" | "cyan" | "yellow" | "red" | "orange";
+    const trainingColors: { name: string; color: TrainingColor }[] = [
+        { name: "Liability Form", color: "green" },
+        { name: "General", color: "cyan" },
+        { name: "Laser Cutter", color: "yellow" },
+        { name: "Woodshop", color: "red" },
+        { name: "CNC", color: "orange" },
+    ];
 
     async function logOut(rowID) {
-        deleting = true;
         try {
             // change user's active status to false
             await tablesDB.updateRow({
@@ -25,12 +32,14 @@
                 rowId: rowID,
             });
 
+            // get user's db station to update time for makerspace info
+            let currentStation = userResponseDB.CurrentStation;
+
             // do the math
             let initialTimeStamp = userResponseDB.InitialTimeStamp;
             let finalTime = (Date.now() - initialTimeStamp) / 1000; // seconds
 
-            // get makerspace info db object
-            let currentStation = userResponseDB.CurrentStation;
+            // get makerspace info db object for specific station
             const makerspaceResponseDB = await tablesDB.getRow({
                 databaseId: "makerspace_database",
                 tableId: "makerspace_info",
@@ -39,7 +48,8 @@
 
             // more math :3
             let sessionMinutes = finalTime / 60;
-            let totalTime = makerspaceResponseDB.TimeSpentMinutes + sessionMinutes;
+            let totalTime =
+                makerspaceResponseDB.TimeSpentMinutes + sessionMinutes;
 
             await tablesDB.updateRow({
                 databaseId: "makerspace_database",
@@ -51,7 +61,6 @@
             console.log(error);
         } finally {
             getActiveUsers();
-            deleting = false;
         }
     }
 
@@ -69,15 +78,17 @@
             noUsersActive = false;
         }
 
-        // store the name and id from the result and store it in an array as an object
+        // store the name, id, and trainings from the result and store it in an array as an object
         activeUsers = activeUsersResult.rows.map((row) => ({
             name: row.Name,
             rowId: row.$id,
+            trainings: row.Trainings.slice(),
         }));
     }
 
     getActiveUsers();
 
+    // update semi-frequently
     setInterval(getActiveUsers, 10000);
 </script>
 
@@ -85,13 +96,29 @@
     <div
         class="flex flex-row gap-9 border-2 rounded-md border-white border-solid p-8 w-fit justify-center"
     >
-        <div>
+        <div class="flex flex-col gap-2">
             <h2 class="text-2xl font-medium">Active Users</h2>
             <p>Tap your name to log out</p>
+            <hr />
+            <h3 class="text-lg">Indicator legend:</h3>
+            <ul class="flex flex-col gap-2">
+                {#each trainingColors as trainingColor}
+                    <li class="flex items-center">
+                        <Indicator
+                            size="sm"
+                            color={trainingColor.color}
+                            class="me-1.5"
+                        ></Indicator>{trainingColor.name}
+                    </li>
+                {/each}
+            </ul>
         </div>
-        <Listgroup active class="flex justify-center items-center w-50">
+        <Listgroup
+            active
+            class="flex justify-center items-center w-fit h-fit p-2"
+        >
             {#if noUsersActive}
-                <span class="font-bold">No users active!</span>
+                <span class="font-bold p-2">No users active!</span>
             {:else}
                 {#each activeUsers as user}
                     <ListgroupItem
@@ -99,7 +126,19 @@
                         onclick={() => {
                             logOut(user.rowId);
                         }}
-                        >{user.name}
+                        ><span class="flex items-center gap-3">
+                            <div class="flex flex-row gap-2">
+                                {#each trainingColors as trainingColor, i}
+                                    {#if user.trainings[i] === true}
+                                        <Indicator
+                                            size="sm"
+                                            color={trainingColor.color}
+                                        />
+                                    {/if}
+                                {/each}
+                            </div>
+                            {user.name}
+                        </span>
                     </ListgroupItem>
                 {/each}
             {/if}

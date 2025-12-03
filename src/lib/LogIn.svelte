@@ -128,6 +128,7 @@
             >ID or Phone #</Label
         >
         <Input
+            class="placeholder:text-grey-500 placeholder:opacity-50 placeholder:font-medium"
             id="IDorPhoneNumber"
             placeholder="Saul Goodman"
             bind:value={epccIdOrPhoneNumber}
