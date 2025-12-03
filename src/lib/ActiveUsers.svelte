@@ -1,11 +1,10 @@
 <script lang="ts">
     import { Indicator, Listgroup, ListgroupItem } from "flowbite-svelte";
     import { tablesDB } from "./AW.svelte";
-    import { Query } from "appwrite";
+    import { ID, Query } from "appwrite";
 
     let activeUsers = $state([]);
     let noUsersActive = $state(true);
-    let trainings = $state([]);
     type TrainingColor = "green" | "cyan" | "yellow" | "red" | "orange";
     const trainingColors: { name: string; color: TrainingColor }[] = [
         { name: "Liability Form", color: "green" },
@@ -17,7 +16,7 @@
 
     async function logOut(rowID) {
         try {
-            // change user's active status to false
+            // USER UPDATE change user's active status to false
             await tablesDB.updateRow({
                 databaseId: "makerspace_database",
                 tableId: "user_info",
@@ -25,37 +24,44 @@
                 data: { IsActive: false },
             });
 
-            // get user info db object
+            // USER GET get user info db object
             const userResponseDB = await tablesDB.getRow({
                 databaseId: "makerspace_database",
                 tableId: "user_info",
                 rowId: rowID,
             });
 
-            // get user's db station to update time for makerspace info
+            // get user's info to archive in makerspace db
+            let currentEmail = userResponseDB.Email;
+            let currentId = userResponseDB.$id;
+            let currentName = userResponseDB.Name;
             let currentStation = userResponseDB.CurrentStation;
+            let currentProfessor = userResponseDB.teacher;
+            let currentIsForClass = userResponseDB.Class;
 
-            // do the math
-            let initialTimeStamp = userResponseDB.InitialTimeStamp;
-            let finalTime = (Date.now() - initialTimeStamp) / 1000; // seconds
+            // times
+            let currentLogInTime = userResponseDB.InitialTimeStamp;
+            let currentLogOutTime = Date.now();
+            let currentFinalTime = (Date.now() - currentLogInTime) / 1000; // seconds
 
-            // get makerspace info db object for specific station
-            const makerspaceResponseDB = await tablesDB.getRow({
+
+
+            // MAKERSPACE CREATE update makerspace data
+            const result = await tablesDB.createRow({
                 databaseId: "makerspace_database",
                 tableId: "makerspace_info",
-                rowId: currentStation,
-            });
-
-            // more math :3
-            let sessionMinutes = finalTime / 60;
-            let totalTime =
-                makerspaceResponseDB.TimeSpentMinutes + sessionMinutes;
-
-            await tablesDB.updateRow({
-                databaseId: "makerspace_database",
-                tableId: "makerspace_info",
-                rowId: currentStation,
-                data: { TimeSpentMinutes: totalTime },
+                rowId: ID.unique(),
+                data: {
+                    Email: currentEmail,
+                    IDorPhoneNumber: currentId,
+                    Name: currentName,
+                    LogInTime: currentLogInTime,
+                    LogOutTime: currentLogOutTime,
+                    TotalTime: currentFinalTime,
+                    StationVisited: currentStation,
+                    Professor: currentProfessor,
+                    ForClass: currentIsForClass
+                },
             });
         } catch (error) {
             console.log(error);

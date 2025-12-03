@@ -46,19 +46,25 @@
             validateData();
 
             // validate dad thru appwrite to make sure user exists
-            const result = await tablesDB.getRow({
+            const userInfo = await tablesDB.getRow({
                 databaseId: "makerspace_database",
                 tableId: "user_info",
                 rowId: epccIdOrPhoneNumber,
             });
 
-            global.userRowInfo = result;
+            global.userRowInfo = userInfo;
 
             if (!forClass) {
-                global.teacherWhoAssignedStation = "Personal"
-            } else {
-                global.teacherWhoAssignedStation = selectedTeacher;
+                selectedTeacher = "Personal";
             }
+
+            // add teacher to curr user db
+            await tablesDB.updateRow({
+                databaseId: "makerspace_database",
+                tableId: "user_info",
+                rowId: userInfo.$id,
+                data: {teacher: selectedTeacher, Class: forClass}
+            });
 
             global.display = "stations";
             submitting = false;

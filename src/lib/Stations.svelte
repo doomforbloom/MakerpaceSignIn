@@ -48,38 +48,7 @@
                     InitialTimeStamp: Date.now(),
                     CurrentStation: stationChosen,
                 },
-            });
-
-            // update makerspace stations
-            // get current array
-            const teacherArrayResponse = await tablesDB.getRow({
-                databaseId: "makerspace_database",
-                tableId: "makerspace_info",
-                rowId: stationChosen,
-                queries: [Query.select(["TeacherAssigned"])],
-            });
-
-            // take array and add new teacher
-            let teacherArray = teacherArrayResponse.TeacherAssigned || [];
-
-            // if teacher is already there don't finish up the function and leave it
-            if (teacherArray.includes(global.teacherWhoAssignedStation)) {
-                submitting = false;
-                global.display = "landing";
-                return;
-            } else {
-                teacherArray.push(global.teacherWhoAssignedStation);
-            }
-
-            // update array and send back
-            await tablesDB.updateRow({
-                databaseId: "makerspace_database",
-                tableId: "makerspace_info",
-                rowId: stationChosen,
-                data: {
-                    TeacherAssigned: teacherArray,
-                },
-            });
+            }); 
 
             submitting = false;
             global.display = "landing";
