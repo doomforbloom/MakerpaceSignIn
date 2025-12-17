@@ -4,7 +4,6 @@
     import { global } from "./Global.svelte";
     import { tablesDB } from "./AW.svelte";
     import { fade } from "svelte/transition";
-    import { Query } from "appwrite";
 
     let stationChosen = $state("");
 

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Indicator, Listgroup, ListgroupItem } from "flowbite-svelte";
-    import { tablesDB } from "./AW.svelte";
+    import { realtime, tablesDB } from "./AW.svelte";
     import { ID, Query } from "appwrite";
 
     let activeUsers = $state([]);
@@ -94,8 +94,8 @@
 
     getActiveUsers();
 
-    // update semi-frequently
-    setInterval(getActiveUsers, 10000);
+    // update if database changes
+    realtime.subscribe('account', getActiveUsers)
 </script>
 
 <main>
@@ -124,7 +124,7 @@
             class="flex justify-center items-center w-fit h-fit p-2"
         >
             {#if noUsersActive}
-                <span class="font-bold p-2">No users active!</span>
+                <span class="font-bold p-2">No users active</span>
             {:else}
                 {#each activeUsers as user}
                     <ListgroupItem
@@ -132,8 +132,8 @@
                         onclick={() => {
                             logOut(user.rowId);
                         }}
-                        ><span class="flex items-center gap-3">
-                            <div class="flex flex-row gap-2">
+                        ><span class="flex justify-start items-center gap-2">
+                            <div class="flex flex-row items-center justify-center gap-2">
                                 {#each trainingColors as trainingColor, i}
                                     {#if user.trainings[i] === true}
                                         <Indicator
