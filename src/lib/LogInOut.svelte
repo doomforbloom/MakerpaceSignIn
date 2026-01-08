@@ -30,8 +30,7 @@
     { value: "Roozbeh" },
     { value: "Olienka Fernandez" },
     { value: "Londie" },
-        { value: "Chavez" },
-
+    { value: "Chavez" },
   ];
 
   // info to be sent to db
@@ -128,7 +127,7 @@
 </script>
 
 <main
-  class="flex flex-col justify-start gap-6 border-2 rounded-md border-white border-solid p-8 w-120"
+  class="flex flex-col justify-start gap-6 border-6 rounded-md border-white border-solid p-8 w-fit"
 >
   <div>
     {#if anError}
@@ -139,86 +138,87 @@
       </div>
     {/if}
   </div>
-  <div class="flex flex-row justify-between items-center mb-2 align-middle">
+  <div class="flex flex-row justify-between items-center">
     <ChevronLeftOutline
-      class="shrink-0 h-12 w-12 border-2 border-white border-solid rounded-md"
+      class="size-25"
       onclick={() => {
         global.display = "landing";
       }}
     />
-    <h1 class="font-bold text-4xl -mt-4 flex justify-center align-middle">Welcome Back!</h1>
+    <h1 class="text-6xl font-bold">Welcome Back!</h1>
   </div>
-  <div class="">
-    <Label for="IDorPhoneNumber" class="mb-2 block text-white"
-      >ID or Phone #</Label
+  <div class="flex flex-col gap-4">
+    <Label for="IDorPhoneNumber" class="text-white"
+      ><div class="text-white text-4xl">ID or Phone #</div></Label
     >
     <Input
       autocomplete="off"
-      class="placeholder:text-grey-500 placeholder:opacity-50 placeholder:font-medium "
+      class="p-5 placeholder:font-semibold placeholder:text-xl placeholder:text-grey-500 placeholder:opacity-50"
       id="IDorPhoneNumber"
       placeholder="12345678"
+      size="lg"
       bind:value={epccIdOrPhoneNumber}
     />
   </div>
   <div class="flex flex-row w-full justify-between">
-    <Button class ="flex flex-row gap-2 bg-gray-100 text-gray-500 w-40">
+    <Button class="flex flex-row gap-5 bg-gray-100 text-gray-500 size-9/20 py-10 px-35">
       {#if forClass}
-        <SchoolOutline class="shrink-0 h-6 w-6" />
-        <span>Class</span>
-        <ChevronDownOutline class="h-6 w-6" />
+        <SchoolOutline class="size-15" />
+        <span class="text-3xl font-bold">Class</span>
+        <ChevronDownOutline class="size-14" />
       {:else}
-        <HomeOutline class="shrink-0 h-6 w-6" />
-        <span>Personal</span>
-        <ChevronDownOutline class="h-6 w-6" />
+        <HomeOutline class="size-15" />
+        <span class="text-3xl font-bold">Personal</span>
+        <ChevronDownOutline class="size-14" />
       {/if}
     </Button>
     <Dropdown simple bind:isOpen={classOrPersonalDropdown}>
       <DropdownItem
-        class="flex flex-row gap-2 items-center w-full"
+        class="flex flex-row items-center gap-5 bg-gray-100 text-gray-500 size-full py-8 px-20"
         onclick={() => {
           forClass = true;
           classOrPersonalDropdown = !classOrPersonalDropdown;
         }}
       >
-        <SchoolOutline class="shrink-0 h-6 w-6" />
-        <span>Class Project</span>
+        <SchoolOutline class="size-15" />
+        <span class="text-3xl font-bold">Class Project</span>
       </DropdownItem>
       <DropdownItem
-        class="flex flex-row gap-2 items-center w-full"
+        class="flex flex-row items-center gap-5 bg-gray-100 text-gray-500 size-full py-8 px-20"
         onclick={() => {
           forClass = false;
           classOrPersonalDropdown = !classOrPersonalDropdown;
         }}
       >
-        <HomeOutline class="shrink-0 h-6 w-6" />
-        <span>Personal Project</span>
+        <HomeOutline class="size-15" />
+        <span class="text-3xl font-bold">Personal Project</span>
       </DropdownItem>
     </Dropdown>
 
     <Button
-      class="flex flex-row gap-2 bg-gray-100 text-gray-500 h-14 w-55"
+      class="flex flex-row gap-5 bg-gray-100 text-gray-500 size-9/20 py-10 px-35"
       disabled={!forClass}
     >
       {#if forClass}
-        <SchoolOutline class="shrink-0 h-6 w-6" />
-        <span>{selectedTeacher}</span>
-        <ChevronDownOutline class="h-6 w-6" />
+        <SchoolOutline class="size-15" />
+        <span class="text-3xl font-bold">{selectedTeacher}</span>
+        <ChevronDownOutline class="size-14" />
       {:else}
-        <HomeOutline class="shrink-0 h-6 w-6" />
-        <span>N/A</span>
-        <ChevronDownOutline class="h-6 w-6" />
+        <HomeOutline class="size-15" />
+        <span class="text-3xl font-bold">N/A</span>
+        <ChevronDownOutline class="size-14" />
       {/if}
     </Button>
     <Dropdown simple bind:isOpen={teacherDropdownIsOpen}>
       {#each teachers as teacher, i}
         <DropdownItem
-          class="flex flex-row gap-2 items-center w-full"
+          class="flex flex-row items-center gap-5 bg-gray-100 text-gray-500 size-full py-8 px-20"
           onclick={() => {
             selectedTeacher = teachers[i].value;
             teacherDropdownIsOpen = !teacherDropdownIsOpen;
           }}
         >
-          <span>{teacher.value}</span>
+          <span class="text-3xl font-bold">{teacher.value}</span>
         </DropdownItem>
       {/each}
     </Dropdown>
@@ -279,13 +279,29 @@
           width="100%"
           height="600px"
           style="border: none;"
-          ></iframe>
-          {/if}
+        ></iframe>
+      {/if}
       <ButtonGroup class="*:ring-primary-700!">
-        <Button onclick={() => {liabilityPage = "adult-english"}}>Adult English</Button>
-        <Button onclick={() => {liabilityPage = "adult-spanish"}}>Adult Spanish</Button>
-        <Button onclick={() => {liabilityPage = "child-english"}}>Child English</Button>
-        <Button onclick={() => {liabilityPage = "child-spanish"}}>Child Spanish</Button>
+        <Button
+          onclick={() => {
+            liabilityPage = "adult-english";
+          }}>Adult English</Button
+        >
+        <Button
+          onclick={() => {
+            liabilityPage = "adult-spanish";
+          }}>Adult Spanish</Button
+        >
+        <Button
+          onclick={() => {
+            liabilityPage = "child-english";
+          }}>Child English</Button
+        >
+        <Button
+          onclick={() => {
+            liabilityPage = "child-spanish";
+          }}>Child Spanish</Button
+        >
       </ButtonGroup>
     </div>
   </Modal>

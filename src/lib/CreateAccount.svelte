@@ -97,59 +97,59 @@
         </div>
     {/if}
     <div
-        class="flex flex-col gap-3 w-120 border-2 rounded-md border-white border-solid p-8"
+        class="flex flex-col gap-10 w-4xl border-6 rounded-md border-white border-solid p-15"
     >
-        <div class="flex flex-row justify-between items-center mb-2">
+        <div class="flex flex-row justify-between items-center">
             <ChevronLeftOutline
-                class="shrink-0 h-9 w-9"
+                class="size-25"
                 onclick={() => {
                     global.display = "landing";
                 }}
             />
-            <h2 class="text-2xl font-semibold">Create Account</h2>
+            <h2 class="text-6xl font-bold">Create Account</h2>
         </div>
         <div class="flex flex-col gap-4">
-            <Label>
-                <div class="text-white mb-1">Full Name</div>
+            <Label class="flex flex-col gap-4">
+                <div class="text-white text-4xl">Full Name</div>
                 <Input
-                    class="placeholder:text-grey-500 placeholder:opacity-50"
+                    class="p-5 placeholder:text-xl placeholder:text-grey-500 placeholder:opacity-50"
                     type="text"
                     placeholder="James McGill"
-                    size="md"
+                    size="lg"
                     bind:value={name}
                 />
             </Label>
-            <Label>
-                <div class="text-white mb-1">EPCC ID Number</div>
+            <Label class="flex flex-col gap-4">
+                <div class="text-white text-4xl">EPCC ID Number</div>
                 <Input
-                    class="placeholder:text-grey-500 placeholder:opacity-50"  
+                    class="p-5 placeholder:text-xl placeholder:text-grey-500 placeholder:opacity-50"  
                     type="text"
                     placeholder="12345678"
-                    size="md"
+                    size="lg"
                     bind:value={epccIdOrPhoneNumber}
                 />
-                <Helper class="mt-1 text-white"
+                <Helper class="text-white -mt-1 text-xl"
                     >If you don't have an ID, please put your phone number</Helper
                 >
             </Label>
-            <Label>
-                <div class="text-white mb-1">Email</div>
+            <Label class="flex flex-col gap-4 text-4xl">
+                <div class="text-white">Email</div>
                 <Input
-                    class="placeholder:text-grey-500 placeholder:opacity-50"
+                    class="p-5 placeholder:text-xl placeholder:text-grey-500 placeholder:opacity-50"
                     type="email"
                     placeholder="john@appleseed.com"
-                    size="md"
+                    size="lg"
                     bind:value={email}
                 />
             </Label>
         </div>
-        <div class="my-3 flex flex-col justify-start gap-3">
+        <div class="flex flex-col justify-start gap-3">
             <Radio
                 name="Student"
                 value="Student"
                 bind:group={epccRelationship}
                 classes={{
-                    label: "w-full p-4 text-white rounded-sm border border-gray-200 dark:border-gray-700",
+                    label: "flex flex-row gap-3 w-full p-9 text-3xl text-white rounded-sm border-2 border-gray-200 dark:border-gray-700",
                 }}>Student</Radio
             >
             <Radio
@@ -157,7 +157,7 @@
                 value="Faculty / Staff"
                 bind:group={epccRelationship}
                 classes={{
-                    label: "w-full p-4 text-white rounded-sm border border-gray-200 dark:border-gray-700",
+                    label: "flex flex-row gap-3 w-full p-9 text-3xl text-white rounded-sm border-2 border-gray-200 dark:border-gray-700",
                 }}>Faculty / Staff</Radio
             >
             <Radio
@@ -165,11 +165,11 @@
                 value="Public"
                 bind:group={epccRelationship}
                 classes={{
-                    label: "w-full p-4 text-white rounded-sm border border-gray-200 dark:border-gray-700",
+                    label: "flex flex-row gap-3 w-full p-9 text-3xl text-white rounded-sm border-2 border-gray-200 dark:border-gray-700",
                 }}>Public</Radio
             >
         </div>
-        <Button class="py-4" loading={submitting} onclick={createAccount}
+        <Button class="py-10 text-4xl font-bold" loading={submitting} onclick={createAccount}
             >Submit</Button
         >
     </div>

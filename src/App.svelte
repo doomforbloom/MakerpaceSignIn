@@ -3,10 +3,9 @@
   import { onMount } from "svelte";
   import { global } from "./lib/Global.svelte";
   import CreateAccount from "./lib/CreateAccount.svelte";
-  import Home from "./lib/Home.svelte";
+  import Home from "./lib/WelcomeBack.svelte";
   import Stations from "./lib/Stations.svelte";
   import Landing from "./lib/Landing.svelte";
-  import Admin from "./lib/Admin.svelte";
 
   // if page crashes or anything always go back to landing page
   onMount(() => {
@@ -17,7 +16,6 @@
 </script>
 
 <main>
-  <Admin />
   {#if global.display == "landing"}
     <Landing />
   {:else if global.display == "create-account"}
