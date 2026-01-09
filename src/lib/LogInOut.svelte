@@ -21,6 +21,9 @@
   import { tablesDB } from "./AW.svelte";
   import { fade } from "svelte/transition";
 
+  // show only id field at first
+  let idHandler = "noDataInInput";
+
   // add teachers
   let teachers = [
     { value: "Myers" },
@@ -138,15 +141,7 @@
       </div>
     {/if}
   </div>
-  <div class="flex flex-row justify-between items-center">
-    <ChevronLeftOutline
-      class="size-25"
-      onclick={() => {
-        global.display = "landing";
-      }}
-    />
-    <h1 class="text-6xl font-bold">Welcome Back!</h1>
-  </div>
+  <h1 class="text-6xl font-bold">Welcome Back!</h1>
   <div class="flex flex-col gap-4">
     <Label for="IDorPhoneNumber" class="text-white"
       ><div class="text-white text-4xl">ID or Phone #</div></Label
@@ -160,154 +155,158 @@
       bind:value={epccIdOrPhoneNumber}
     />
   </div>
-  <div class="flex flex-row w-full justify-between">
-    <Button class="flex flex-row gap-5 bg-gray-100 text-gray-500 size-9/20 py-10 px-35">
-      {#if forClass}
-        <SchoolOutline class="size-15" />
-        <span class="text-3xl font-bold">Class</span>
-        <ChevronDownOutline class="size-14" />
-      {:else}
-        <HomeOutline class="size-15" />
-        <span class="text-3xl font-bold">Personal</span>
-        <ChevronDownOutline class="size-14" />
-      {/if}
-    </Button>
-    <Dropdown simple bind:isOpen={classOrPersonalDropdown}>
-      <DropdownItem
-        class="flex flex-row items-center gap-5 bg-gray-100 text-gray-500 size-full py-8 px-20"
-        onclick={() => {
-          forClass = true;
-          classOrPersonalDropdown = !classOrPersonalDropdown;
-        }}
+  {#if idHandler == "noDataInInput"}
+    <div class="flex flex-row w-full justify-between">
+      <Button
+        class="flex flex-row gap-5 bg-gray-100 text-gray-500 size-9/20 py-10 px-35"
       >
-        <SchoolOutline class="size-15" />
-        <span class="text-3xl font-bold">Class Project</span>
-      </DropdownItem>
-      <DropdownItem
-        class="flex flex-row items-center gap-5 bg-gray-100 text-gray-500 size-full py-8 px-20"
-        onclick={() => {
-          forClass = false;
-          classOrPersonalDropdown = !classOrPersonalDropdown;
-        }}
-      >
-        <HomeOutline class="size-15" />
-        <span class="text-3xl font-bold">Personal Project</span>
-      </DropdownItem>
-    </Dropdown>
-
-    <Button
-      class="flex flex-row gap-5 bg-gray-100 text-gray-500 size-9/20 py-10 px-35"
-      disabled={!forClass}
-    >
-      {#if forClass}
-        <SchoolOutline class="size-15" />
-        <span class="text-3xl font-bold">{selectedTeacher}</span>
-        <ChevronDownOutline class="size-14" />
-      {:else}
-        <HomeOutline class="size-15" />
-        <span class="text-3xl font-bold">N/A</span>
-        <ChevronDownOutline class="size-14" />
-      {/if}
-    </Button>
-    <Dropdown simple bind:isOpen={teacherDropdownIsOpen}>
-      {#each teachers as teacher, i}
+        {#if forClass}
+          <SchoolOutline class="size-15" />
+          <span class="text-3xl font-bold">Class</span>
+          <ChevronDownOutline class="size-14" />
+        {:else}
+          <HomeOutline class="size-15" />
+          <span class="text-3xl font-bold">Personal</span>
+          <ChevronDownOutline class="size-14" />
+        {/if}
+      </Button>
+      <Dropdown simple bind:isOpen={classOrPersonalDropdown}>
         <DropdownItem
           class="flex flex-row items-center gap-5 bg-gray-100 text-gray-500 size-full py-8 px-20"
           onclick={() => {
-            selectedTeacher = teachers[i].value;
-            teacherDropdownIsOpen = !teacherDropdownIsOpen;
+            forClass = true;
+            classOrPersonalDropdown = !classOrPersonalDropdown;
           }}
         >
-          <span class="text-3xl font-bold">{teacher.value}</span>
+          <SchoolOutline class="size-15" />
+          <span class="text-3xl font-bold">Class Project</span>
         </DropdownItem>
-      {/each}
-    </Dropdown>
-  </div>
-  <Checkbox bind:checked={liabilityChecked}>
-    <p class="text-white">I have read and accepted the</p>
-    <!-- svelte-ignore a11y_invalid_attribute -->
-    <a
-      rel="noopener noreferrer"
-      href="#"
-      onclick={() => {
-        liabilityModal = true;
-      }}
-      class="text-primary-600 dark:text-primary-500 ms-1 hover:underline"
-      >EPCC Liability Form</a
-    >
-    .
-  </Checkbox>
-  <script lang="ts">
-    import { Button, Modal, P } from "flowbite-svelte";
-    let defaultModal = $state(false);
-  </script>
-  <Modal
-    title="EPCC Liability Forms"
-    form
-    bind:open={liabilityModal}
-    onaction={({ action }) => alert(`Handle "${action}"`)}
-  >
-    <div class="flex flex-col items-center">
-      {#if liabilityPage == "adult-english"}
-        <iframe
-          title=""
-          src="src\assets\AdultEnglishLiabilityForm.pdf"
-          width="100%"
-          height="600px"
-          style="border: none;"
-        ></iframe>
-      {:else if liabilityPage == "adult-spanish"}
-        <iframe
-          title=""
-          src="src\assets\AdultSpanishLiabilityForm.pdf"
-          width="100%"
-          height="600px"
-          style="border: none;"
-        ></iframe>
-      {:else if liabilityPage == "child-english"}
-        <iframe
-          title=""
-          src="src\assets\ChildEnglishLiabilityForm.pdf"
-          width="100%"
-          height="600px"
-          style="border: none;"
-        ></iframe>
-      {:else if liabilityPage == "child-spanish"}
-        <iframe
-          title=""
-          src="src\assets\ChildSpanishLiabilityForm.pdf"
-          width="100%"
-          height="600px"
-          style="border: none;"
-        ></iframe>
-      {/if}
-      <ButtonGroup class="*:ring-primary-700!">
-        <Button
+        <DropdownItem
+          class="flex flex-row items-center gap-5 bg-gray-100 text-gray-500 size-full py-8 px-20"
           onclick={() => {
-            liabilityPage = "adult-english";
-          }}>Adult English</Button
+            forClass = false;
+            classOrPersonalDropdown = !classOrPersonalDropdown;
+          }}
         >
-        <Button
-          onclick={() => {
-            liabilityPage = "adult-spanish";
-          }}>Adult Spanish</Button
-        >
-        <Button
-          onclick={() => {
-            liabilityPage = "child-english";
-          }}>Child English</Button
-        >
-        <Button
-          onclick={() => {
-            liabilityPage = "child-spanish";
-          }}>Child Spanish</Button
-        >
-      </ButtonGroup>
+          <HomeOutline class="size-15" />
+          <span class="text-3xl font-bold">Personal Project</span>
+        </DropdownItem>
+      </Dropdown>
+
+      <Button
+        class="flex flex-row gap-5 bg-gray-100 text-gray-500 size-9/20 py-10 px-35"
+        disabled={!forClass}
+      >
+        {#if forClass}
+          <SchoolOutline class="size-15" />
+          <span class="text-3xl font-bold">{selectedTeacher}</span>
+          <ChevronDownOutline class="size-14" />
+        {:else}
+          <HomeOutline class="size-15" />
+          <span class="text-3xl font-bold">N/A</span>
+          <ChevronDownOutline class="size-14" />
+        {/if}
+      </Button>
+      <Dropdown simple bind:isOpen={teacherDropdownIsOpen}>
+        {#each teachers as teacher, i}
+          <DropdownItem
+            class="flex flex-row items-center gap-5 bg-gray-100 text-gray-500 size-full py-8 px-20"
+            onclick={() => {
+              selectedTeacher = teachers[i].value;
+              teacherDropdownIsOpen = !teacherDropdownIsOpen;
+            }}
+          >
+            <span class="text-3xl font-bold">{teacher.value}</span>
+          </DropdownItem>
+        {/each}
+      </Dropdown>
     </div>
-  </Modal>
-  <div class="flex flex-row justify-evenly gap-4">
-    <Button class="py-4 w-full" loading={submitting} onclick={getUserInfo}
-      >Submit</Button
+    <Checkbox bind:checked={liabilityChecked}>
+      <p class="text-white">I have read and accepted the</p>
+      <!-- svelte-ignore a11y_invalid_attribute -->
+      <a
+        rel="noopener noreferrer"
+        href="#"
+        onclick={() => {
+          liabilityModal = true;
+        }}
+        class="text-primary-600 dark:text-primary-500 ms-1 hover:underline"
+        >EPCC Liability Form</a
+      >
+      .
+    </Checkbox>
+    <script lang="ts">
+      import { Button, Modal, P } from "flowbite-svelte";
+      let defaultModal = $state(false);
+    </script>
+    <Modal
+      title="EPCC Liability Forms"
+      form
+      bind:open={liabilityModal}
+      onaction={({ action }) => alert(`Handle "${action}"`)}
     >
-  </div>
+      <div class="flex flex-col items-center">
+        {#if liabilityPage == "adult-english"}
+          <iframe
+            title=""
+            src="src\assets\AdultEnglishLiabilityForm.pdf"
+            width="100%"
+            height="600px"
+            style="border: none;"
+          ></iframe>
+        {:else if liabilityPage == "adult-spanish"}
+          <iframe
+            title=""
+            src="src\assets\AdultSpanishLiabilityForm.pdf"
+            width="100%"
+            height="600px"
+            style="border: none;"
+          ></iframe>
+        {:else if liabilityPage == "child-english"}
+          <iframe
+            title=""
+            src="src\assets\ChildEnglishLiabilityForm.pdf"
+            width="100%"
+            height="600px"
+            style="border: none;"
+          ></iframe>
+        {:else if liabilityPage == "child-spanish"}
+          <iframe
+            title=""
+            src="src\assets\ChildSpanishLiabilityForm.pdf"
+            width="100%"
+            height="600px"
+            style="border: none;"
+          ></iframe>
+        {/if}
+        <ButtonGroup class="*:ring-primary-700!">
+          <Button
+            onclick={() => {
+              liabilityPage = "adult-english";
+            }}>Adult English</Button
+          >
+          <Button
+            onclick={() => {
+              liabilityPage = "adult-spanish";
+            }}>Adult Spanish</Button
+          >
+          <Button
+            onclick={() => {
+              liabilityPage = "child-english";
+            }}>Child English</Button
+          >
+          <Button
+            onclick={() => {
+              liabilityPage = "child-spanish";
+            }}>Child Spanish</Button
+          >
+        </ButtonGroup>
+      </div>
+    </Modal>
+    <div class="flex flex-row justify-evenly gap-4">
+      <Button class="py-4 w-full" loading={submitting} onclick={getUserInfo}
+        >Submit</Button
+      >
+    </div>
+  {/if}
 </main>

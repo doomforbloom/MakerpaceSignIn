@@ -1,5 +1,5 @@
 export const global = $state({
-    display: "landing",
+    display: "home",
     userRowInfo: null,
     accountSuccessfullyCreated: false,
 })

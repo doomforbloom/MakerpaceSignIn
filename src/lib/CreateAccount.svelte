@@ -41,7 +41,7 @@
                 },
             });
 
-            global.display = "landing";
+            global.display = "home";
             global.accountSuccessfullyCreated = true;
 
             setTimeout(() => {
@@ -103,7 +103,7 @@
             <ChevronLeftOutline
                 class="size-25"
                 onclick={() => {
-                    global.display = "landing";
+                    global.display = "home";
                 }}
             />
             <h2 class="text-6xl font-bold">Create Account</h2>

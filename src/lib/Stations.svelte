@@ -50,7 +50,7 @@
             }); 
 
             submitting = false;
-            global.display = "landing";
+            global.display = "home";
         } catch (error) {
             anError = true;
             errorMessage = error;
@@ -80,7 +80,7 @@
             <ChevronLeftOutline
                 class="shrink-0 h-11 w-11 pt-0.5"
                 onclick={() => {
-                    global.display = "landing";
+                    global.display = "home";
                 }}
             />
             <h2 class="text-2xl font-semibold">
