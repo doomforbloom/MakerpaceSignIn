@@ -22,6 +22,7 @@
     "vite": "npm:rolldown-vite@7.2.5"
   },
   "dependencies": {
-    "appwrite": "^21.4.0"
+    "appwrite": "^21.4.0",
+    "nnode": "^0.3.3"
   }
 }

@@ -221,16 +221,16 @@
         {/each}
       </Dropdown>
     </div>
-    <Checkbox bind:checked={liabilityChecked}>
-      <p class="text-white">I have read and accepted the</p>
+    <Checkbox class="text-2xl p-4"bind:checked={liabilityChecked}>
+      <p class="text-lg white ms-2">I have read and accepted the</p>
       <!-- svelte-ignore a11y_invalid_attribute -->
       <a
         rel="noopener noreferrer"
         href="#"
         onclick={() => {
-          liabilityModal = true;
+          liabilityModal =true;
         }}
-        class="text-primary-600 dark:text-primary-500 ms-1 hover:underline"
+        class="text-lg primary-600 dark:text-primary-500 ms-1 hover:underline"
         >EPCC Liability Form</a
       >
       .
@@ -304,7 +304,7 @@
       </div>
     </Modal>
     <div class="flex flex-row justify-evenly gap-4">
-      <Button class="py-4 w-full" loading={submitting} onclick={getUserInfo}
+      <Button class="text-2xl py-6 w-full" loading={submitting} onclick={getUserInfo}
         >Submit</Button
       >
     </div>

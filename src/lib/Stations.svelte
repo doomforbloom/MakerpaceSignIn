@@ -47,7 +47,7 @@
                     InitialTimeStamp: Date.now(),
                     CurrentStation: stationChosen,
                 },
-            }); 
+            });
 
             submitting = false;
             global.display = "home";
@@ -72,36 +72,34 @@
         {/if}
     </div>
     <div
-        class="grid grid-cols-2 gap-6 border-2 rounded-md border-white border-solid p-8 justify-items-center"
+        class="grid grid-cols-2 gap-6 gap-y-10 border-2 rounded-md border-white border-solid p-8 justify-center"
     >
-        <div
-            class="flex flex-row col-span-2 gap-2 justify-between items-center"
-        >
+        <div class="flex flex-row w-full col-span-2 gap-2 justify-between">
             <ChevronLeftOutline
-                class="shrink-0 h-11 w-11 pt-0.5"
+                class="size-15"
                 onclick={() => {
                     global.display = "home";
                 }}
             />
-            <h2 class="text-2xl font-semibold">
+            <h2 class="text-6xl font-semibold justify-self-center">
                 Which area will you be working in today?
             </h2>
         </div>
         {#each stations as station}
             <div
-                class="w-50 rounded-sm border border-gray-200 dark:border-gray-700"
+                class="w-100 h-full rounded-sm border border-gray-200 dark:border-gray-700"
             >
                 <Radio
                     name={station.name}
                     value={station.value}
                     bind:group={stationChosen}
-                    classes={{ label: "w-full p-4 text-white" }}
+                    classes={{ label: "w-100 p-10 text-white text-2xl" }}
                     >{station.name}</Radio
                 >
             </div>
         {/each}
         <Button
-            class="w-80 py-5 col-span-2"
+            class="w-full py-10 col-span-2 text-4xl"
             loading={submitting}
             onclick={logIn}>Submit</Button
         >
