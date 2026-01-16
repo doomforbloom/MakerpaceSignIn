@@ -5,24 +5,20 @@
     Button,
     Dropdown,
     DropdownItem,
-    ToastContainer,
-    Toast,
     Checkbox,
     Modal,
     ButtonGroup,
+    Alert,
   } from "flowbite-svelte";
   import {
     ChevronDownOutline,
-    ChevronLeftOutline,
     HomeOutline,
+    RefreshOutline,
     SchoolOutline,
   } from "flowbite-svelte-icons";
   import { global } from "./Global.svelte";
   import { tablesDB } from "./AW.svelte";
   import { fade } from "svelte/transition";
-
-  // show only id field at first
-  let idHandler = "noDataInInput";
 
   // add teachers
   let teachers = [
@@ -38,7 +34,6 @@
 
   // info to be sent to db
   let selectedTeacher = $state("Select teacher");
-  let epccIdOrPhoneNumber = $state("");
 
   // used to close dropdown
   let teacherDropdownIsOpen = $state(false);
@@ -56,8 +51,6 @@
   let errorMessage = $state("");
   let submitting = $state(false);
 
-  //;-;
-
   async function getUserInfo() {
     try {
       submitting = true;
@@ -68,10 +61,8 @@
       const userInfo = await tablesDB.getRow({
         databaseId: "makerspace_database",
         tableId: "user_info",
-        rowId: epccIdOrPhoneNumber,
+        rowId: global.userRowInfo.id,
       });
-
-      global.userRowInfo = userInfo;
 
       if (!forClass) {
         selectedTeacher = "Personal";
@@ -111,9 +102,9 @@
     const phoneRegex = /^[0-9]{7,15}$/;
     const idRegex = /^[A-Za-z0-9]{3,20}$/;
     if (
-      !epccIdOrPhoneNumber ||
-      (!phoneRegex.test(epccIdOrPhoneNumber) &&
-        !idRegex.test(epccIdOrPhoneNumber))
+      !global.userRowInfo.id ||
+      (!phoneRegex.test(global.userRowInfo.id) &&
+        !idRegex.test(global.userRowInfo.id))
     ) {
       throw new Error("Must be a valid ID or Phone Number");
     }
@@ -129,41 +120,93 @@
       );
     }
   }
+
+  let idSubmission = $state(false);
+  async function checkIDInDB() {
+    idSubmission = true;
+    try {
+      const userInfo = await tablesDB.getRow({
+        databaseId: "makerspace_database",
+        tableId: "user_info",
+        rowId: global.userRowInfo.id,
+      });
+        global.userRowInfo.Name = userInfo.Name;
+        global.userRowInfo.Email = userInfo.Email;
+        global.userRowInfo.EPCCRelationship = userInfo.EPCCRelationship;
+        global.userRowInfo.IsActive = userInfo.IsActive;
+        global.userRowInfo.Trainings = userInfo.Trainings;
+        global.userRowInfo.CurrentStation = userInfo.CurrentStation;
+        global.userRowInfo.InitialTimeStamp = userInfo.InitialTimeStamp;
+        global.userRowInfo.teacher = userInfo.teacher;
+        global.userRowInfo.Class = userInfo.Class;
+
+      global.idExists = true;
+
+      global.display = "log-in-out";
+
+    } catch (error) {
+      global.display = "create-account";
+    } finally {
+      idSubmission = false;
+    }
+  }
 </script>
 
-<main
-  class="flex flex-col justify-start gap-6 border-6 rounded-md border-white border-solid p-8 w-fit"
->
-  <div>
-    {#if anError}
-      <div transition:fade>
-        <ToastContainer>
-          <Toast>{errorMessage}</Toast>
-        </ToastContainer>
-      </div>
-    {/if}
+{#if anError}
+  <div transition:fade>
+    <Alert class="flex flex-col gap-5 p-10" color="red">
+      <span class="font-bold text-6xl">Danger alert!</span>
+      <p class="text-4xl">{errorMessage}</p>
+    </Alert>
   </div>
-  <h1 class="text-6xl font-bold">Welcome Back!</h1>
+{/if}
+<main
+  class="flex flex-col justify-start gap-6 border-6 rounded-md border-white border-solid p-10 w-full"
+>
+  <div class="flex flex-row justify-between items-center">
+    <RefreshOutline
+      onclick={() => {
+        location.reload();
+      }}
+      class="size-15"
+    />
+    <h1 class="text-6xl font-bold">Welcome Back!</h1>
+  </div>
   <div class="flex flex-col gap-4">
     <Label for="IDorPhoneNumber" class="text-white"
       ><div class="text-white text-4xl">ID or Phone #</div></Label
     >
     <Input
+      inputmode="numeric"
+      type="number"
       autocomplete="off"
-      class="p-5 placeholder:font-semibold placeholder:text-xl placeholder:text-grey-500 placeholder:opacity-50"
+      class="p-8 placeholder:font-semibold placeholder:text-2xl placeholder:text-grey-900 placeholder:opacity-70 font-semibold text-2xl"
       id="IDorPhoneNumber"
       placeholder="12345678"
-      size="lg"
-      bind:value={epccIdOrPhoneNumber}
+      onkeydown={(e) => {
+        if(e.key === "Enter") {
+          idSubmission = true;
+          checkIDInDB();
+        }
+      }}
+
+      bind:value={global.userRowInfo.id}
     />
+    {#if !global.idExists || global.userRowInfo.id == ""}
+      <Button
+        onclick={checkIDInDB}
+        class="flex flex-row gap-5 text-white text-2xl py-10 px-25"
+        loading={idSubmission}>Submit</Button
+      >
+    {/if}
   </div>
-  {#if idHandler == "noDataInInput"}
+  {#if global.idExists && global.userRowInfo.id != ""}
     <div class="flex flex-row w-full justify-between">
       <Button
         class="flex flex-row gap-5 bg-gray-100 text-gray-500 size-9/20 py-10 px-35"
       >
         {#if forClass}
-          <SchoolOutline class="size-15" />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+          <SchoolOutline class="size-15" />
           <span class="text-3xl font-bold">Class</span>
           <ChevronDownOutline class="size-14" />
         {:else}
@@ -223,24 +266,20 @@
         {/each}
       </Dropdown>
     </div>
-    <Checkbox class="text-2xl p-4"bind:checked={liabilityChecked}>
-      <p class="text-lg white ms-2">I have read and accepted the</p>
+    <Checkbox class="text-2xl p-4" bind:checked={liabilityChecked}>
+      <p class="text-lg text-white ms-2">I have read and accepted the</p>
       <!-- svelte-ignore a11y_invalid_attribute -->
       <a
         rel="noopener noreferrer"
         href="#"
         onclick={() => {
-          liabilityModal =true;
+          liabilityModal = true;
         }}
-        class="text-lg primary-600 dark:text-primary-500 ms-1 hover:underline"
+        class="text-lg text-emerald-500 dark:text-primary-500 ms-1 hover:underline"
         >EPCC Liability Form</a
       >
       .
     </Checkbox>
-    <script lang="ts">
-      import { Button, Modal, P } from "flowbite-svelte";
-      let defaultModal = $state(false);
-    </script>
     <Modal
       title="EPCC Liability Forms"
       form
@@ -306,8 +345,10 @@
       </div>
     </Modal>
     <div class="flex flex-row justify-evenly gap-4">
-      <Button class="text-2xl py-6 w-full" loading={submitting} onclick={getUserInfo}
-        >Submit</Button
+      <Button
+        class="text-2xl py-6 w-full"
+        loading={submitting}
+        onclick={getUserInfo}>Submit</Button
       >
     </div>
   {/if}

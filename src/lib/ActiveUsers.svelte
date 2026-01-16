@@ -5,6 +5,9 @@
 
   let activeUsers = $state([]);
   let noUsersActive = $state(true);
+
+  let loggingOut = $state(false);
+
   type TrainingColor = "green" | "cyan" | "yellow" | "red" | "orange";
   const trainingColors: { name: string; color: TrainingColor }[] = [
     { name: "Liability Form", color: "green" },
@@ -42,7 +45,7 @@
       // times
       let currentLogInTime = userResponseDB.InitialTimeStamp;
       let currentLogOutTime = Date.now();
-      let currentFinalTime = (Date.now() - currentLogInTime) / 1000; // seconds
+      let currentFinalTime = (currentLogOutTime - currentLogInTime) / 1000; // seconds
 
       // MAKERSPACE CREATE update makerspace data
       const result = await tablesDB.createRow({
@@ -119,7 +122,8 @@
           <ListgroupItem
             class="flex justify-evenly p-10 focus:outline-0"
             onclick={() => {
-              logOut(user.rowId);
+              loggingOut = true;
+              logOut(user.rowId).then(() => loggingOut = false)
             }}
             ><span class="flex justify-start items-center gap-6">
               <div class="flex flex-row items-center justify-center gap-2">
@@ -129,7 +133,11 @@
                   {/if}
                 {/each}
               </div>
-              <p class="text-4xl">{user.name}</p>
+              <p class="text-4xl">{user.name}
+                {#if loggingOut}
+                  Logging Out...
+                {/if}
+              </p>
             </span>
           </ListgroupItem>
         {/each}
